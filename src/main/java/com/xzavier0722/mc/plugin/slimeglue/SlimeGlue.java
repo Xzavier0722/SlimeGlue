@@ -7,9 +7,11 @@ import com.xzavier0722.mc.plugin.slimeglue.module.KingdomsXModule;
 import com.xzavier0722.mc.plugin.slimeglue.slimefun.GlueProtectionModule;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.ProtectionManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nonnull;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public final class SlimeGlue extends JavaPlugin implements SlimefunAddon {
 
@@ -33,7 +35,21 @@ public final class SlimeGlue extends JavaPlugin implements SlimefunAddon {
         getServer().getPluginManager().registerEvents(new BlockListener(), this);
 
         logger.i("- Registering protection module...");
-        Slimefun.getProtectionManager().registerModule(getServer().getPluginManager(), "SlimeGlue", (p) -> new GlueProtectionModule());
+        if (!registerSfProtectionModule()) {
+            logger.w("- Failed to register protection module, schedule the retry task after the server started.");
+            AtomicInteger counter = new AtomicInteger();
+            getServer().getScheduler().runTaskTimer(this, task -> {
+                if (registerSfProtectionModule()) {
+                    logger.i("Protection module is registered!");
+                    task.cancel();
+                    return;
+                }
+                if (counter.getAndIncrement() >= 10) {
+                    logger.e("Failed to register the slimefun protection module, some function may not work properly");
+                    task.cancel();
+                }
+            }, 1, 20);
+        }
 
         logger.i("- SlimeGlue Started!");
         logger.i("=======================");
@@ -69,6 +85,15 @@ public final class SlimeGlue extends JavaPlugin implements SlimefunAddon {
 
     private void registerModules() {
         moduleManager().register(new KingdomsXModule());
+    }
+
+    private boolean registerSfProtectionModule() {
+        ProtectionManager pm = Slimefun.getProtectionManager();
+        if (pm == null) {
+            return false;
+        }
+        pm.registerModule(getServer().getPluginManager(), "SlimeGlue", (p) -> new GlueProtectionModule());
+        return true;
     }
 
 }
