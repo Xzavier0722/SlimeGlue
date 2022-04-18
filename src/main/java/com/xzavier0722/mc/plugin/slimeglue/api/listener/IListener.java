@@ -12,7 +12,9 @@ public interface IListener {
      * @see SubscriptionType
      * @return the subscription type
      */
-    SubscriptionType getSubscriptionType();
+    default SubscriptionType getSubscriptionType() {
+        return SubscriptionType.SUBSCRIBE_TYPE_ALL;
+    }
 
     /**
      *
