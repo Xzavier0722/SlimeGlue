@@ -5,7 +5,11 @@ name: Auto build & release
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+    paths:
+      - 'src/**'
+      - 'pom.xml'
 
 jobs:
   build:
