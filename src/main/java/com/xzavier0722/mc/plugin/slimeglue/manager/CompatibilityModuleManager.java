@@ -70,8 +70,8 @@ public class CompatibilityModuleManager {
         SlimeGlue.logger().i("Loading compatibility module for " + name);
         Plugin plugin = SlimeGlue.instance().getServer().getPluginManager().getPlugin(name);
 
-        if (plugin == null) {
-            SlimeGlue.logger().w("Plugin " + name + " is not installed, module ignored.");
+        if (plugin == null || !plugin.isEnabled()) {
+            SlimeGlue.logger().w("Plugin " + name + " is not installed or enabled, module ignored.");
             return false;
         }
 
