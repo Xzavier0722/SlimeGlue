@@ -86,6 +86,10 @@
             <id>codemc-repo</id>
             <url>https://repo.codemc.io/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>lss233-mirror</id>
+            <url>https://lss233.littleservice.cn/repositories/minecraft</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -98,7 +102,7 @@
         <dependency>
             <groupId>com.github.Slimefun</groupId>
             <artifactId>Slimefun4</artifactId>
-            <version>RC-33</version>
+            <version>RC-32</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -114,7 +118,6 @@
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
-                    <!-- We don't need any of the dependencies -->
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
                 </exclusion>
@@ -125,6 +128,19 @@
             <artifactId>MagicAPI</artifactId>
             <version>9.4-SNAPSHOT</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.bekvon.bukkit</groupId>
+            <artifactId>residence</artifactId>
+            <version>4.9.3.5</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Residence.jar</systemPath>
             <exclusions>
                 <exclusion>
                     <!-- We don't need any of the dependencies -->

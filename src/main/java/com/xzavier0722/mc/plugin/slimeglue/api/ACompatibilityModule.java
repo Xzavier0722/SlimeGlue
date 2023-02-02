@@ -55,7 +55,7 @@ public abstract class ACompatibilityModule  {
      *
      * @param plugin: the {@link Plugin} instance of the specific plugin
      */
-    abstract public void enable(Plugin plugin);
+    abstract public void enable(Plugin plugin) throws Exception;
 
     /**
      *

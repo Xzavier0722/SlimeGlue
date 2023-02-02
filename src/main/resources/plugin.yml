@@ -5,6 +5,9 @@ api-version: 1.13
 depend: [ Slimefun ]
 softdepend:
   - Kingdoms
+  - Residence
+  - Quickshop
+  - Magic
 authors: [ Xzavier0722 ]
 description: A Slimefun addon, target to improve the compatibility with other plugins
 website: https://github.com/Xzavier0722/SlimeGlue
