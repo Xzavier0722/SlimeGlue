@@ -13,7 +13,7 @@
 
     <description>A Slimefun addon, target to improve the compatibility with other plugins</description>
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <url>https://github.com/Xzavier0722/SlimeGlue</url>
@@ -71,11 +71,20 @@
     <repositories>
         <repository>
             <id>spigotmc-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots</url>
         </repository>
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <!-- Magic -->
+            <id>elmakers-repo</id>
+            <url>https://maven.elmakers.com/repository/</url>
+        </repository>
+        <repository>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
         </repository>
     </repositories>
 
@@ -83,20 +92,46 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.18.1-R0.1-SNAPSHOT</version>
+            <version>1.19-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.TheBusyBiscuit</groupId>
+            <groupId>com.github.Slimefun</groupId>
             <artifactId>Slimefun4</artifactId>
-            <version>RC-31</version>
+            <version>RC-33</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.cryptomorin</groupId>
             <artifactId>kingdoms</artifactId>
-            <version>1.13.3</version>
+            <version>1.13.9</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.maxgamer</groupId>
+            <artifactId>QuickShop</artifactId>
+            <version>5.1.1.2</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <!-- We don't need any of the dependencies -->
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.elmakers.mine.bukkit</groupId>
+            <artifactId>MagicAPI</artifactId>
+            <version>9.4-SNAPSHOT</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <!-- We don't need any of the dependencies -->
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 </project>
