@@ -28,7 +28,7 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     - run: mkdir staging && cp target/*.jar staging
-    - uses: actions/cache@v3.0.2
+    - uses: actions/cache@v3.0.11
       if: github.event_name != 'pull_request'
       with:
         path: ~/.m2
