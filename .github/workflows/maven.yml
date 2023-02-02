@@ -4,6 +4,7 @@
 name: Auto build & release
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
