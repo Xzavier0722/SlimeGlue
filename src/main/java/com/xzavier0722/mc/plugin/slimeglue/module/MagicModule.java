@@ -72,7 +72,7 @@ public class MagicModule extends ACompatibilityModule {
                 return true;
             }
         } catch (Exception e) {
-            SlimeGlue.logger().w("检查魔法方块失败");
+            SlimeGlue.logger().w("Unable to check magic BlockData");
             e.printStackTrace();
             return true;
         }

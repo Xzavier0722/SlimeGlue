@@ -53,7 +53,7 @@ public class QuickShopModule extends ACompatibilityModule {
         if (qsPlugin instanceof QuickShopAPI qsAPI) {
             return qsAPI.getShopManager().getShop(l).getOwner();
         } else {
-            SlimeGlue.logger().w("检查 QuickShop 商店失败，请避免使用热重载更换插件版本。如频繁出现该报错请反馈。");
+            SlimeGlue.logger().w("Unable to check QuickShop");
             return null;
         }
     }
@@ -79,7 +79,7 @@ public class QuickShopModule extends ACompatibilityModule {
                     return false;
                 }
             } catch (IllegalAccessException | InvocationTargetException e) {
-                SlimeGlue.logger().w("在获取箱子商店时出现了问题");
+                SlimeGlue.logger().w("Unable to check Quickshop");
                 e.printStackTrace();
                 return false;
             }
@@ -88,7 +88,7 @@ public class QuickShopModule extends ACompatibilityModule {
         if (qsPlugin instanceof QuickShopAPI qsAPI) {
             return qsAPI.getShopManager().getShop(l) != null;
         } else {
-            SlimeGlue.logger().w("检查 QuickShop 商店失败，请避免使用热重载更换插件版本。如频繁出现该报错请反馈。");
+            SlimeGlue.logger().w("Unable to check Quickshop");
             return false;
         }
     }
@@ -109,7 +109,7 @@ public class QuickShopModule extends ACompatibilityModule {
             var last = Integer.parseInt(splitVersion[3]);
 
             if (major < 5) {
-                SlimeGlue.logger().w("QuickShop 版本过低, 建议你更新到 5.0.0+!");
+                SlimeGlue.logger().w("Your QuickShop-Reremake is outdated! Please update to latest version for better performance on checking QuickShop.");
 
                 try {
                     var shopAPIMethod = Class.forName("org.maxgamer.quickshop.QuickShopAPI").getDeclaredMethod("getShopAPI");
@@ -117,7 +117,7 @@ public class QuickShopModule extends ACompatibilityModule {
                     shopAPI = shopAPIMethod.invoke(null);
                 } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
                          InvocationTargetException e) {
-                    SlimeGlue.logger().w("无法接入 Quickshop-Reremake " + version + " , 请更新到最新版, 相关功能将自动关闭");
+                    SlimeGlue.logger().w("Unable to integrate Quickshop-Reremake " + version + ", Please update to latest version!");
                     throw e;
                 }
 
@@ -127,7 +127,7 @@ public class QuickShopModule extends ACompatibilityModule {
                         qsMethod = Class.forName("org.maxgamer.quickshop.api.ShopAPI").getDeclaredMethod("getShop", Location.class);
                         qsMethod.setAccessible(true);
                     } catch (ClassNotFoundException | NoSuchMethodException e) {
-                        SlimeGlue.logger().w("无法接入 Quickshop-Reremake " + version + " , 请更新到最新版, 相关功能将自动关闭");
+                        SlimeGlue.logger().w("Unable to integrate Quickshop-Reremake " + version + ", Please update to latest version!");
                         throw e;
                     }
                 } else {
@@ -136,13 +136,13 @@ public class QuickShopModule extends ACompatibilityModule {
                         qsMethod = Class.forName("org.maxgamer.quickshop.api.ShopAPI").getDeclaredMethod("getShopWithCaching", Location.class);
                         qsMethod.setAccessible(true);
                     } catch (ClassNotFoundException | NoSuchMethodException e) {
-                        SlimeGlue.logger().w("无法接入 Quickshop-Reremake " + version + " , 请更新到最新版, 相关功能将自动关闭");
+                        SlimeGlue.logger().w("Unable to integrate Quickshop-Reremake " + version + ", Please update to latest version!");
                         throw e;
                     }
                 }
             }
         } catch (ArrayIndexOutOfBoundsException e) {
-            SlimeGlue.logger().w("解析 Quickshop-Reremake 版本失败, 实际为 " + version + ".");
+            SlimeGlue.logger().w("Unable to parse version code of Quickshop-Reremake " + version);
             throw e;
         }
     }
