@@ -55,29 +55,26 @@ public class ResidenceModule extends ACompatibilityModule {
             return false;
         }
 
-        var res = Residence.getInstance().getResidenceManager().getByLoc(location);
+        var onlinePlayer = p.getPlayer();
 
-        if (res != null) {
-            var onlinePlayer = p.getPlayer();
+        if (onlinePlayer == null) {
+            return false;
+        }
 
-            if (onlinePlayer == null) {
-                return false;
-            }
+        var perms = Residence.getInstance().getPermsByLocForPlayer(location, onlinePlayer);
 
-            var perms = res.getPermissions();
-
-            if (perms != null) {
-                switch (action) {
-                    case BREAK_BLOCK:
-                        return perms.playerHas(onlinePlayer, Flags.destroy, FlagPermissions.FlagCombo.OnlyTrue);
-                    case INTERACT_BLOCK:
-                        return perms.playerHas(onlinePlayer, Flags.container, FlagPermissions.FlagCombo.OnlyTrue);
-                    case PLACE_BLOCK:
-                        // move 是为了机器人而检查的, 防止机器人跑进别人领地然后还出不来
-                        return perms.playerHas(onlinePlayer, Flags.place, FlagPermissions.FlagCombo.OnlyTrue)
-                                || perms.playerHas(onlinePlayer, Flags.build, FlagPermissions.FlagCombo.OnlyTrue)
-                                && perms.playerHas(onlinePlayer, Flags.move, FlagPermissions.FlagCombo.TrueOrNone);
-                }
+        if (perms != null) {
+            switch (action) {
+                case BREAK_BLOCK:
+                    return perms.playerHas(onlinePlayer, Flags.destroy, FlagPermissions.FlagCombo.OnlyTrue)
+                            || perms.playerHas(onlinePlayer, Flags.build, FlagPermissions.FlagCombo.OnlyTrue);
+                case INTERACT_BLOCK:
+                    return perms.playerHas(onlinePlayer, Flags.container, FlagPermissions.FlagCombo.OnlyTrue);
+                case PLACE_BLOCK:
+                    // move 是为了机器人而检查的, 防止机器人跑进别人领地然后还出不来
+                    return perms.playerHas(onlinePlayer, Flags.place, FlagPermissions.FlagCombo.OnlyTrue)
+                            || perms.playerHas(onlinePlayer, Flags.build, FlagPermissions.FlagCombo.OnlyTrue)
+                            && perms.playerHas(onlinePlayer, Flags.move, FlagPermissions.FlagCombo.TrueOrNone);
             }
         }
 
@@ -88,6 +85,7 @@ public class ResidenceModule extends ACompatibilityModule {
         if (p.isOp()) {
             return true;
         }
+
         var res = Residence.getInstance().getResidenceManager().getByLoc(location);
 
         if (res == null) {
