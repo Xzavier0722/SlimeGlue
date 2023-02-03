@@ -49,18 +49,14 @@ public class MagicModule extends ACompatibilityModule {
     }
 
     @Override
-    public void enable(Plugin plugin) {
+    public void enable(Plugin plugin) throws Exception {
         if (plugin != null && magicBlockDataMethod == null) {
-            try {
-                magicBlockDataMethod = Class.forName("com.elmakers.mine.bukkit.block.UndoList")
-                        .getDeclaredMethod("getBlockData", Location.class);
+            magicBlockDataMethod = Class.forName("com.elmakers.mine.bukkit.block.UndoList")
+                    .getDeclaredMethod("getBlockData", Location.class);
 
-                Objects.requireNonNull(magicBlockDataMethod, "Unable to get method from Magic");
+            Objects.requireNonNull(magicBlockDataMethod, "Unable to get method from Magic");
 
-                magicBlockDataMethod.setAccessible(true);
-            } catch (NoSuchMethodException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+            magicBlockDataMethod.setAccessible(true);
         }
     }
 
