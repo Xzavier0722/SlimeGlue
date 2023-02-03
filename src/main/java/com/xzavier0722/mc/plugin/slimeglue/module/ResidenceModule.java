@@ -51,8 +51,8 @@ public class ResidenceModule extends ACompatibilityModule {
     }
 
     private boolean checkResidence(@Nonnull OfflinePlayer p, @Nonnull Location location, Interaction action) {
-        if (!p.isOnline() || p.isOp()) {
-            return true;
+        if (!p.isOnline()) {
+            return false;
         }
 
         var res = Residence.getInstance().getResidenceManager().getByLoc(location);
@@ -74,7 +74,9 @@ public class ResidenceModule extends ACompatibilityModule {
                         return perms.playerHas(onlinePlayer, Flags.container, FlagPermissions.FlagCombo.OnlyTrue);
                     case PLACE_BLOCK:
                         // move 是为了机器人而检查的, 防止机器人跑进别人领地然后还出不来
-                        return perms.playerHas(onlinePlayer, Flags.place, FlagPermissions.FlagCombo.OnlyTrue) || perms.playerHas(onlinePlayer, Flags.build, FlagPermissions.FlagCombo.OnlyTrue) && perms.playerHas(onlinePlayer, Flags.move, FlagPermissions.FlagCombo.TrueOrNone);
+                        return perms.playerHas(onlinePlayer, Flags.place, FlagPermissions.FlagCombo.OnlyTrue)
+                                || perms.playerHas(onlinePlayer, Flags.build, FlagPermissions.FlagCombo.OnlyTrue)
+                                && perms.playerHas(onlinePlayer, Flags.move, FlagPermissions.FlagCombo.TrueOrNone);
                 }
             }
         }
@@ -83,28 +85,30 @@ public class ResidenceModule extends ACompatibilityModule {
     }
 
     private boolean canBypassCheck(@Nonnull OfflinePlayer p, @Nonnull Location location) {
+        if (p.isOp()) {
+            return true;
+        }
         var res = Residence.getInstance().getResidenceManager().getByLoc(location);
 
-        if (res != null) {
-            if (res.getOwnerUUID() == p.getUniqueId()) {
-                return true;
-            }
+        if (res == null) {
+            return true;
+        }
 
-            if (!p.isOnline()) {
-                return false;
-            }
+        if (res.getOwnerUUID() == p.getUniqueId()) {
+            return true;
+        }
 
-            var onlinePlayer = p.getPlayer();
-
-            if (onlinePlayer.hasPermission("residence.admin")) {
-                return true;
-            }
-
-            var perms = res.getPermissions();
-
-            return perms != null && perms.playerHas(onlinePlayer, Flags.admin, FlagPermissions.FlagCombo.OnlyTrue);
-        } else {
+        if (!p.isOnline()) {
             return false;
         }
+
+        var onlinePlayer = p.getPlayer();
+
+        if (onlinePlayer.hasPermission("residence.admin")) {
+            return true;
+        }
+
+        var perms = res.getPermissions();
+        return perms != null && perms.playerHas(onlinePlayer, Flags.admin, FlagPermissions.FlagCombo.OnlyTrue);
     }
 }
