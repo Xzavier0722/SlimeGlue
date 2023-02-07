@@ -21,16 +21,19 @@ public class KingdomsXModule extends ACompatibilityModule {
         addProtectionHandler(new IBlockProtectionHandler() {
             @Override
             public boolean canPlaceBlock(OfflinePlayer player, Location location) {
+                verbose("canPlaceBlock: player=" + player.getName() + ", loc=" + location);
                 return canAccess(player, location);
             }
 
             @Override
             public boolean canBreakBlock(OfflinePlayer player, Location location) {
+                verbose("canBreakBlock: player=" + player.getName() + ", loc=" + location);
                 return canAccess(player, location);
             }
 
             @Override
             public boolean canInteractBlock(OfflinePlayer player, Location location) {
+                verbose("canInteractBlock: player=" + player.getName() + ", loc=" + location);
                 return canAccess(player, location);
             }
         });
@@ -38,16 +41,19 @@ public class KingdomsXModule extends ACompatibilityModule {
         addProtectionHandler(new IPlayerProtectionHandler() {
             @Override
             public boolean canAttackPlayer(OfflinePlayer player, Location location) {
+                verbose("canAttackPlayer: player=" + player.getName() + ", loc=" + location);
                 return canAccess(player, location);
             }
 
             @Override
             public boolean canAttackEntity(OfflinePlayer player, Location location) {
+                verbose("canAttackEntity: player=" + player.getName() + ", loc=" + location);
                 return canAccess(player, location);
             }
 
             @Override
             public boolean canInteractEntity(OfflinePlayer player, Location location) {
+                verbose("canInteractEntity: player=" + player.getName() + ", loc=" + location);
                 return canAccess(player, location);
             }
         });
@@ -55,7 +61,9 @@ public class KingdomsXModule extends ACompatibilityModule {
         addListener(new ISlimefunAndroidListener() {
             @Override
             public void onMine(AndroidMineEvent e) {
-                Land land = SimpleChunkLocation.of(e.getBlock()).getLand();
+                var b = e.getBlock();
+                verbose("onMine: " + b.getLocation());
+                Land land = SimpleChunkLocation.of(b).getLand();
                 if (land == null || !land.isClaimed()) {
                     return;
                 }
@@ -77,12 +85,16 @@ public class KingdomsXModule extends ACompatibilityModule {
 
     private boolean canAccess(OfflinePlayer p, Location l) {
         Land land = SimpleChunkLocation.of(l).getLand();
+        verbose("canAccess: " + land);
         if (land == null || !land.isClaimed()) {
             return true;
         }
 
         Kingdom kingdom = land.getKingdom();
-        return kingdom == null || p.getUniqueId().equals(kingdom.getKingId()) || kingdom.isMember(p);
+        return verbose(
+                "canAccess: ret=",
+                kingdom == null || p.getUniqueId().equals(kingdom.getKingId()) || kingdom.isMember(p)
+        );
     }
 
     @Override

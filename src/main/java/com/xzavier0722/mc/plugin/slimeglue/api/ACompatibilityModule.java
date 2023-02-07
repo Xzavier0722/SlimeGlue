@@ -1,5 +1,6 @@
 package com.xzavier0722.mc.plugin.slimeglue.api;
 
+import com.xzavier0722.mc.plugin.slimeglue.SlimeGlue;
 import com.xzavier0722.mc.plugin.slimeglue.api.listener.IListener;
 import com.xzavier0722.mc.plugin.slimeglue.api.protection.IProtectionHandler;
 import org.bukkit.plugin.Plugin;
@@ -39,6 +40,15 @@ public abstract class ACompatibilityModule  {
 
     protected void removeProtectionHandler(IProtectionHandler handler) {
         protectionHandlers.remove(handler);
+    }
+
+    protected void verbose(String msg) {
+        SlimeGlue.logger().v("[" + getClass().getSimpleName() + "]: " + msg);
+    }
+
+    protected <T> T verbose(String msg, T para) {
+        verbose(msg + para);
+        return para;
     }
 
     /**

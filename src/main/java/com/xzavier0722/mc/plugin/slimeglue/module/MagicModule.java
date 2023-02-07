@@ -22,6 +22,7 @@ public class MagicModule extends ACompatibilityModule {
         addProtectionHandler(new IBlockProtectionHandler() {
             @Override
             public boolean canBreakBlock(OfflinePlayer player, Location location) {
+                verbose("canBreakBlock: player=" + player.getName() + ", loc=" + location);
                 return !isMagicBlock(location);
             }
         });
@@ -29,14 +30,18 @@ public class MagicModule extends ACompatibilityModule {
         addListener(new ISlimefunAndroidListener() {
             @Override
             public void onFarm(AndroidFarmEvent e) {
-                if (isMagicBlock(e.getBlock().getLocation())) {
+                var l = e.getBlock().getLocation();
+                verbose("onFarm: " + l);
+                if (isMagicBlock(l)) {
                     e.setCancelled(true);
                 }
             }
 
             @Override
             public void onMine(AndroidMineEvent e) {
-                if (isMagicBlock(e.getBlock().getLocation())) {
+                var l = e.getBlock().getLocation();
+                verbose("onFarm: " + l);
+                if (isMagicBlock(l)) {
                     e.setCancelled(true);
                 }
             }
@@ -63,7 +68,7 @@ public class MagicModule extends ACompatibilityModule {
     private boolean isMagicBlock(@Nonnull Location location) {
         try {
             var blockData = magicBlockDataMethod.invoke(null, location);
-
+            verbose("isMagicBlock: " + blockData);
             if (blockData instanceof BlockData) {
                 return true;
             }
