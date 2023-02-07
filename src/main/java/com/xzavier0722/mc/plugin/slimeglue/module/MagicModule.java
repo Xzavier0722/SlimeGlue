@@ -22,7 +22,7 @@ public class MagicModule extends ACompatibilityModule {
         addProtectionHandler(new IBlockProtectionHandler() {
             @Override
             public boolean canBreakBlock(OfflinePlayer player, Location location) {
-                return isMagicBlock(location);
+                return !isMagicBlock(location);
             }
         });
 
