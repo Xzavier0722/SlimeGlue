@@ -35,6 +35,11 @@ public class QuickShopModule extends ACompatibilityModule {
             public boolean bypassCheck(OfflinePlayer player, Location location) {
                 return getQuickshopOwner(location) == player.getUniqueId();
             }
+
+            @Override
+            public boolean canCargoAccessBlock(Location location) {
+                return !isQuickshop(location);
+            }
         });
     }
 

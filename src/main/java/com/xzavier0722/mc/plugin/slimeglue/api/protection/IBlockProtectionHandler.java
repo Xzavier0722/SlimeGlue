@@ -17,4 +17,8 @@ public interface IBlockProtectionHandler extends IProtectionHandler {
         return true;
     }
 
+    default boolean canCargoAccessBlock(Location location) {
+        return true;
+    }
+
 }
