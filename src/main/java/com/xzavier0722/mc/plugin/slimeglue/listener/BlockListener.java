@@ -4,6 +4,7 @@ import com.xzavier0722.mc.plugin.slimeglue.SlimeGlue;
 import com.xzavier0722.mc.plugin.slimeglue.api.listener.IListener;
 import com.xzavier0722.mc.plugin.slimeglue.api.listener.ISlimefunBlockListener;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
+import io.github.thebusybiscuit.slimefun4.core.attributes.NotPlaceable;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
@@ -51,16 +52,15 @@ public class BlockListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent e) {
-        Location loc = e.getBlock().getLocation();
-        SlimefunItem sfItem = BlockStorage.check(loc);
-        if (sfItem == null) {
+        SlimefunItem sfItem = SlimefunItem.getByItem(e.getItemInHand());
+        if (sfItem == null || sfItem instanceof NotPlaceable) {
             return;
         }
 
         String sfId = sfItem.getId();
         for (IListener l : SlimeGlue.moduleManager().getListeners(sfId)) {
             if (l instanceof ISlimefunBlockListener) {
-                if (!((ISlimefunBlockListener) l).onPlaceEvent(sfId, e.getPlayer(), loc)) {
+                if (!((ISlimefunBlockListener) l).onPlaceEvent(sfId, e.getPlayer(), e.getBlock().getLocation())) {
                     e.setCancelled(true);
                     return;
                 }
@@ -69,17 +69,16 @@ public class BlockListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void afterBlockPlace(BlockBreakEvent e) {
-        Location loc = e.getBlock().getLocation();
-        SlimefunItem sfItem = BlockStorage.check(loc);
-        if (sfItem == null) {
+    public void afterBlockPlace(BlockPlaceEvent e) {
+        SlimefunItem sfItem = SlimefunItem.getByItem(e.getItemInHand());
+        if (sfItem == null || sfItem instanceof NotPlaceable) {
             return;
         }
 
         String sfId = sfItem.getId();
         for (IListener l : SlimeGlue.moduleManager().getListeners(sfId)) {
             if (l instanceof ISlimefunBlockListener) {
-                ((ISlimefunBlockListener) l).afterPlaceEvent(sfId, e.getPlayer(), loc, e.isCancelled());
+                ((ISlimefunBlockListener) l).afterPlaceEvent(sfId, e.getPlayer(), e.getBlock().getLocation(), e.isCancelled());
             }
         }
     }
