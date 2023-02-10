@@ -6,7 +6,7 @@
 
     <groupId>com.xzavier0722.mc.plugin</groupId>
     <artifactId>SlimeGlue</artifactId>
-    <version>1.0.0-${git.commit.id.abbrev}</version>
+    <version>1.0.1-${git.commit.id.abbrev}</version>
     <packaging>jar</packaging>
 
     <name>SlimeGlue</name>
