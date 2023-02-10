@@ -1,6 +1,6 @@
 package com.xzavier0722.mc.plugin.slimeglue.listener;
 
-import com.xzavier0722.mc.plugin.slimefuncomplib.event.CargoWithdrawEvent;
+import com.xzavier0722.mc.plugin.slimefuncomplib.event.cargo.CargoOperationEvent;
 import com.xzavier0722.mc.plugin.slimeglue.SlimeGlue;
 import com.xzavier0722.mc.plugin.slimeglue.api.listener.IListener;
 import com.xzavier0722.mc.plugin.slimeglue.api.listener.ISlimefunAndroidListener;
@@ -38,9 +38,11 @@ public class SlimefunListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onCargoWithdraw(CargoWithdrawEvent e) {
+    public void onCargoOperation(CargoOperationEvent e) {
+        var l = e.getTarget().getLocation();
+        v("onCargoOperation: " + l);
         for (var each : SlimeGlue.moduleManager().getProtectionHandlers()) {
-            if (each instanceof IBlockProtectionHandler handler && !handler.canCargoAccessBlock(e.getTarget().getLocation())) {
+            if (each instanceof IBlockProtectionHandler handler && !handler.canCargoAccessBlock(l)) {
                 e.setCancelled(true);
                 return;
             }
@@ -63,6 +65,10 @@ public class SlimefunListener implements Listener {
                 ((ISlimefunAndroidListener) l).afterFarm(new AndroidFarmEvent(e.getBlock(), e.getAndroid(), e.isAdvanced(), e.getDrop()));
             }
         }
+    }
+
+    private void v(String msg) {
+        SlimeGlue.logger().v("[SlimefunListener]: " + msg);
     }
 
 }
