@@ -1,10 +1,8 @@
 package com.xzavier0722.mc.plugin.slimeglue.listener;
 
-import com.xzavier0722.mc.plugin.slimefuncomplib.event.cargo.CargoOperationEvent;
 import com.xzavier0722.mc.plugin.slimeglue.SlimeGlue;
 import com.xzavier0722.mc.plugin.slimeglue.api.listener.IListener;
 import com.xzavier0722.mc.plugin.slimeglue.api.listener.ISlimefunAndroidListener;
-import com.xzavier0722.mc.plugin.slimeglue.api.protection.IBlockProtectionHandler;
 import io.github.thebusybiscuit.slimefun4.api.events.AndroidFarmEvent;
 import io.github.thebusybiscuit.slimefun4.api.events.AndroidMineEvent;
 import org.bukkit.event.EventHandler;
@@ -37,18 +35,6 @@ public class SlimefunListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onCargoOperation(CargoOperationEvent e) {
-        var l = e.getTarget().getLocation();
-        v("onCargoOperation: " + l);
-        for (var each : SlimeGlue.moduleManager().getProtectionHandlers()) {
-            if (each instanceof IBlockProtectionHandler handler && !handler.canCargoAccessBlock(l)) {
-                e.setCancelled(true);
-                return;
-            }
-        }
-    }
-
     @EventHandler(priority = EventPriority.MONITOR)
     public void afterAndroidMine(AndroidMineEvent e) {
         for (IListener l : SlimeGlue.moduleManager().getListeners(e.getAndroid().getAndroid().getId())) {
@@ -66,9 +52,4 @@ public class SlimefunListener implements Listener {
             }
         }
     }
-
-    private void v(String msg) {
-        SlimeGlue.logger().v("[SlimefunListener]: " + msg);
-    }
-
 }

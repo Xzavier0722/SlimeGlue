@@ -1,7 +1,9 @@
 package com.xzavier0722.mc.plugin.slimeglue;
 
+import com.xzavier0722.mc.plugin.slimefuncomplib.ICompatibleSlimefun;
 import com.xzavier0722.mc.plugin.slimeglue.listener.BlockListener;
 import com.xzavier0722.mc.plugin.slimeglue.listener.PluginListener;
+import com.xzavier0722.mc.plugin.slimeglue.listener.SlimefunCompListener;
 import com.xzavier0722.mc.plugin.slimeglue.listener.SlimefunListener;
 import com.xzavier0722.mc.plugin.slimeglue.manager.CompatibilityModuleManager;
 import com.xzavier0722.mc.plugin.slimeglue.module.KingdomsXModule;
@@ -38,6 +40,10 @@ public final class SlimeGlue extends JavaPlugin implements SlimefunAddon {
         getServer().getPluginManager().registerEvents(new PluginListener(), this);
         getServer().getPluginManager().registerEvents(new BlockListener(), this);
         getServer().getPluginManager().registerEvents(new SlimefunListener(), this);
+        if (isCompSlimefun()) {
+            logger.i("- Compatible Slimefun detected, enabling advanced features...");
+            loadCompOnlyFeatures();
+        }
 
         logger.i("- Registering protection module...");
         if (!registerSfProtectionModule()) {
@@ -102,6 +108,18 @@ public final class SlimeGlue extends JavaPlugin implements SlimefunAddon {
         }
         pm.registerModule(getServer().getPluginManager(), "SlimeGlue", (p) -> new GlueProtectionModule());
         return true;
+    }
+
+    private boolean isCompSlimefun() {
+        try {
+            return ICompatibleSlimefun.class.isInstance(Slimefun.instance());
+        } catch (Throwable _ignore) {
+            return false;
+        }
+    }
+
+    private void loadCompOnlyFeatures() {
+        getServer().getPluginManager().registerEvents(new SlimefunCompListener(), this);
     }
 
 }

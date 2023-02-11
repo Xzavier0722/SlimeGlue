@@ -152,7 +152,7 @@
         <dependency>
             <groupId>com.github.Xzavier0722</groupId>
             <artifactId>SlimefunCompLib</artifactId>
-            <version>1.0.1</version>
+            <version>05ff7c9</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
