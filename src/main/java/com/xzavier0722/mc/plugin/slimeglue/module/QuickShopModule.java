@@ -56,7 +56,8 @@ public class QuickShopModule extends ACompatibilityModule {
         }
 
         if (qsPlugin instanceof QuickShopAPI qsAPI) {
-            return qsAPI.getShopManager().getShop(l).getOwner();
+            var shop = qsAPI.getShopManager().getShop(l);
+            return shop == null ? null : shop.getOwner();
         } else {
             SlimeGlue.logger().w("Unable to check QuickShop");
             return null;
