@@ -21,7 +21,6 @@ _
 ## Fixed compatibilities 已修复的问题
 
 ### [KingdomsX](https://github.com/CryptoMorin/KingdomsX/)
-
 - Fix Slimefun androids can break the blocks in unpermitted kingdom. [#3](https://github.com/Xzavier0722/SlimeGlue/issues/3)
 - Fix Slimefun androids can break structures/turrets blocks. [#3](https://github.com/Xzavier0722/SlimeGlue/issues/3)
 
@@ -30,3 +29,6 @@ _
 
 ### [Quickshop-Reremake](https://github.com/PotatoCraft-Studio/QuickShop-Reremake)
 - Fix Slimefun androids can break chest QuickShop.
+
+### [LockettePro](https://github.com/Soldier233/LockettePro)
+- Fix Slimefun androids can break the protected blocks. [#25](https://github.com/Xzavier0722/SlimeGlue/issues/25)
