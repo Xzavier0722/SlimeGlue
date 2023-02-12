@@ -3,10 +3,7 @@ package com.xzavier0722.mc.plugin.slimeglue.module;
 import com.elmakers.mine.bukkit.api.block.BlockData;
 import com.xzavier0722.mc.plugin.slimeglue.SlimeGlue;
 import com.xzavier0722.mc.plugin.slimeglue.api.ACompatibilityModule;
-import com.xzavier0722.mc.plugin.slimeglue.api.listener.ISlimefunAndroidListener;
 import com.xzavier0722.mc.plugin.slimeglue.api.protection.IBlockProtectionHandler;
-import io.github.thebusybiscuit.slimefun4.api.events.AndroidFarmEvent;
-import io.github.thebusybiscuit.slimefun4.api.events.AndroidMineEvent;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.Plugin;
@@ -24,26 +21,6 @@ public class MagicModule extends ACompatibilityModule {
             public boolean canBreakBlock(OfflinePlayer player, Location location) {
                 verbose("canBreakBlock: player=" + player.getName() + ", loc=" + location);
                 return !isMagicBlock(location);
-            }
-        });
-
-        addListener(new ISlimefunAndroidListener() {
-            @Override
-            public void onFarm(AndroidFarmEvent e) {
-                var l = e.getBlock().getLocation();
-                verbose("onFarm: " + l);
-                if (isMagicBlock(l)) {
-                    e.setCancelled(true);
-                }
-            }
-
-            @Override
-            public void onMine(AndroidMineEvent e) {
-                var l = e.getBlock().getLocation();
-                verbose("onFarm: " + l);
-                if (isMagicBlock(l)) {
-                    e.setCancelled(true);
-                }
             }
         });
     }

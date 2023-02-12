@@ -1,54 +1,33 @@
 package com.xzavier0722.mc.plugin.slimeglue.listener;
 
 import com.xzavier0722.mc.plugin.slimeglue.SlimeGlue;
-import com.xzavier0722.mc.plugin.slimeglue.api.listener.IListener;
-import com.xzavier0722.mc.plugin.slimeglue.api.listener.ISlimefunAndroidListener;
-import io.github.thebusybiscuit.slimefun4.api.events.AndroidFarmEvent;
-import io.github.thebusybiscuit.slimefun4.api.events.AndroidMineEvent;
+import com.xzavier0722.mc.plugin.slimeglue.api.protection.IBlockProtectionHandler;
+import io.github.thebusybiscuit.slimefun4.api.events.BlockPlacerPlaceEvent;
+import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
+import java.util.UUID;
+
 public class SlimefunListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onAndroidMine(AndroidMineEvent e) {
-        for (IListener l : SlimeGlue.moduleManager().getListeners(e.getAndroid().getAndroid().getId())) {
-            if (l instanceof ISlimefunAndroidListener) {
-                ((ISlimefunAndroidListener) l).onMine(e);
-                if (e.isCancelled()) {
+    public void onBlockPlacerPlace(BlockPlacerPlaceEvent e) {
+        var l = e.getBlockPlacer().getLocation();
+        var ownerUuid = BlockStorage.getLocationInfo(l, "owner");
+        if (ownerUuid == null) {
+            return;
+        }
+
+        var owner = Bukkit.getOfflinePlayer(UUID.fromString(ownerUuid));
+        for (var each : SlimeGlue.moduleManager().getProtectionHandlers()) {
+            if (each instanceof IBlockProtectionHandler handler) {
+                if (!handler.canPlaceBlock(owner, e.getBlock().getLocation())) {
+                    e.setCancelled(true);
                     return;
                 }
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onAndroidFarm(AndroidFarmEvent e) {
-        for (IListener l : SlimeGlue.moduleManager().getListeners(e.getAndroid().getAndroid().getId())) {
-            if (l instanceof ISlimefunAndroidListener) {
-                ((ISlimefunAndroidListener) l).onFarm(e);
-                if (e.isCancelled()) {
-                    return;
-                }
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void afterAndroidMine(AndroidMineEvent e) {
-        for (IListener l : SlimeGlue.moduleManager().getListeners(e.getAndroid().getAndroid().getId())) {
-            if (l instanceof ISlimefunAndroidListener) {
-                ((ISlimefunAndroidListener) l).afterMine(new AndroidMineEvent(e.getBlock(), e.getAndroid()));
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void afterAndroidFarm(AndroidFarmEvent e) {
-        for (IListener l : SlimeGlue.moduleManager().getListeners(e.getAndroid().getAndroid().getId())) {
-            if (l instanceof ISlimefunAndroidListener) {
-                ((ISlimefunAndroidListener) l).afterFarm(new AndroidFarmEvent(e.getBlock(), e.getAndroid(), e.isAdvanced(), e.getDrop()));
             }
         }
     }
