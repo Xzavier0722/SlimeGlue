@@ -19,35 +19,29 @@ public class LocketteProModule extends ACompatibilityModule {
             @Override
             public boolean canBreakBlock(OfflinePlayer player, Location location) {
                 verbose("canBreakBlock: p=" + player.getName() + ", l=" + location);
-                var b = location.getBlock();
-                if (!LocketteProAPI.isProtected(b)) {
-                    return true;
-                }
-
-                var p = player.getPlayer();
-                return verbose("canBreakBlock: ", p != null && LocketteProAPI.isOwner(b, p));
+                return false;
             }
 
             @Override
             public boolean canInteractBlock(OfflinePlayer player, Location location) {
                 verbose("canInteractBlock: p=" + player.getName() + ", l=" + location);
+                var p = player.getPlayer();
+                return verbose("canInteractBlock: ", p != null && LocketteProAPI.isUser(location.getBlock(), p));
+            }
+
+            @Override
+            public boolean bypassCheck(OfflinePlayer player, Location location) {
                 var b = location.getBlock();
+                if (player.isOp()) {
+                    return true;
+                }
+
                 if (!LocketteProAPI.isProtected(b)) {
                     return true;
                 }
 
                 var p = player.getPlayer();
-                return verbose("canInteractBlock: ", p != null && LocketteProAPI.isUser(b, p));
-            }
-
-            @Override
-            public boolean bypassCheck(OfflinePlayer player, Location location) {
-                if (player.isOp()) {
-                    return true;
-                }
-
-                var p = player.getPlayer();
-                return p != null && LocketteProAPI.isOwner(location.getBlock(), p);
+                return p != null && LocketteProAPI.isOwner(b, p);
             }
         });
     }
