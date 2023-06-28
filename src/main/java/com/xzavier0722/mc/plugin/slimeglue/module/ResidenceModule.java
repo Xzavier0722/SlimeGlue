@@ -3,10 +3,15 @@ package com.xzavier0722.mc.plugin.slimeglue.module;
 import com.bekvon.bukkit.residence.Residence;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.protection.FlagPermissions;
+import com.xzavier0722.mc.plugin.slimeglue.SlimeGlue;
 import com.xzavier0722.mc.plugin.slimeglue.api.ACompatibilityModule;
 import com.xzavier0722.mc.plugin.slimeglue.api.protection.IBlockProtectionHandler;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import javax.annotation.Nonnull;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.Plugin;
@@ -63,20 +68,31 @@ public class ResidenceModule extends ACompatibilityModule {
         var perms = Residence.getInstance().getPermsByLocForPlayer(location, onlinePlayer);
 
         if (perms != null) {
-            switch (action) {
-                case BREAK_BLOCK -> {
-                    return perms.playerHas(onlinePlayer, Flags.destroy, FlagPermissions.FlagCombo.OnlyTrue)
-                            || perms.playerHas(onlinePlayer, Flags.build, FlagPermissions.FlagCombo.OnlyTrue);
-                }
-                case INTERACT_BLOCK -> {
-                    return perms.playerHas(onlinePlayer, Flags.container, FlagPermissions.FlagCombo.OnlyTrue);
-                }
-                case PLACE_BLOCK -> {
-                    // move 是为了机器人而检查的, 防止机器人跑进别人领地然后还出不来
-                    return perms.playerHas(onlinePlayer, Flags.place, FlagPermissions.FlagCombo.OnlyTrue)
-                            || perms.playerHas(onlinePlayer, Flags.build, FlagPermissions.FlagCombo.OnlyTrue)
-                            && perms.playerHas(onlinePlayer, Flags.move, FlagPermissions.FlagCombo.TrueOrNone);
-                }
+            try {
+                return Bukkit.getScheduler().callSyncMethod(SlimeGlue.instance(), () -> {
+                    switch (action) {
+                        case BREAK_BLOCK -> {
+                            return perms.playerHas(onlinePlayer, Flags.destroy, FlagPermissions.FlagCombo.OnlyTrue)
+                                    || perms.playerHas(onlinePlayer, Flags.build, FlagPermissions.FlagCombo.OnlyTrue);
+                        }
+                        case INTERACT_BLOCK -> {
+                            return perms.playerHas(onlinePlayer, Flags.container, FlagPermissions.FlagCombo.OnlyTrue);
+                        }
+                        case PLACE_BLOCK -> {
+                            // move 是为了机器人而检查的, 防止机器人跑进别人领地然后还出不来
+                            return perms.playerHas(onlinePlayer, Flags.place, FlagPermissions.FlagCombo.OnlyTrue)
+                                    || perms.playerHas(onlinePlayer, Flags.build, FlagPermissions.FlagCombo.OnlyTrue)
+                                    && perms.playerHas(onlinePlayer, Flags.move, FlagPermissions.FlagCombo.TrueOrNone);
+                        }
+                        default -> {
+                            return true;
+                        }
+                    }
+                }).get(15, TimeUnit.SECONDS);
+            } catch (ExecutionException | InterruptedException | TimeoutException e) {
+                SlimeGlue.logger().w("A error occurred during query residence flag, skipped check");
+                e.printStackTrace();
+                return true;
             }
         }
 
@@ -109,6 +125,14 @@ public class ResidenceModule extends ACompatibilityModule {
         }
 
         var perms = res.getPermissions();
-        return perms != null && perms.playerHas(onlinePlayer, Flags.admin, FlagPermissions.FlagCombo.OnlyTrue);
+        var playerPermission = Bukkit.getScheduler().callSyncMethod(SlimeGlue.instance(), () -> perms.playerHas(onlinePlayer, Flags.admin, FlagPermissions.FlagCombo.OnlyTrue));
+
+        try {
+            return perms != null && playerPermission.get(15, TimeUnit.SECONDS);
+        } catch (ExecutionException | InterruptedException | TimeoutException e) {
+            SlimeGlue.logger().w("A error occurred during query residence flag, skipped check");
+            e.printStackTrace();
+            return true;
+        }
     }
 }
