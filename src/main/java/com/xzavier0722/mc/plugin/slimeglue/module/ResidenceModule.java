@@ -6,11 +6,10 @@ import com.bekvon.bukkit.residence.protection.FlagPermissions;
 import com.xzavier0722.mc.plugin.slimeglue.api.ACompatibilityModule;
 import com.xzavier0722.mc.plugin.slimeglue.api.protection.IBlockProtectionHandler;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
+import javax.annotation.Nonnull;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.Plugin;
-
-import javax.annotation.Nonnull;
 
 public class ResidenceModule extends ACompatibilityModule {
     public ResidenceModule() {
@@ -65,16 +64,19 @@ public class ResidenceModule extends ACompatibilityModule {
 
         if (perms != null) {
             switch (action) {
-                case BREAK_BLOCK:
+                case BREAK_BLOCK -> {
                     return perms.playerHas(onlinePlayer, Flags.destroy, FlagPermissions.FlagCombo.OnlyTrue)
                             || perms.playerHas(onlinePlayer, Flags.build, FlagPermissions.FlagCombo.OnlyTrue);
-                case INTERACT_BLOCK:
+                }
+                case INTERACT_BLOCK -> {
                     return perms.playerHas(onlinePlayer, Flags.container, FlagPermissions.FlagCombo.OnlyTrue);
-                case PLACE_BLOCK:
+                }
+                case PLACE_BLOCK -> {
                     // move 是为了机器人而检查的, 防止机器人跑进别人领地然后还出不来
                     return perms.playerHas(onlinePlayer, Flags.place, FlagPermissions.FlagCombo.OnlyTrue)
                             || perms.playerHas(onlinePlayer, Flags.build, FlagPermissions.FlagCombo.OnlyTrue)
                             && perms.playerHas(onlinePlayer, Flags.move, FlagPermissions.FlagCombo.TrueOrNone);
+                }
             }
         }
 
