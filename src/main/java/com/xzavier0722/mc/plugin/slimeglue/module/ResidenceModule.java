@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 public class ResidenceModule extends ACompatibilityModule {
@@ -68,27 +69,15 @@ public class ResidenceModule extends ACompatibilityModule {
         var perms = Residence.getInstance().getPermsByLocForPlayer(location, onlinePlayer);
 
         if (perms != null) {
+            if (Bukkit.isPrimaryThread()) {
+                return checkPerm(perms, onlinePlayer, action);
+            }
             try {
-                return Bukkit.getScheduler().callSyncMethod(SlimeGlue.instance(), () -> {
-                    switch (action) {
-                        case BREAK_BLOCK -> {
-                            return perms.playerHas(onlinePlayer, Flags.destroy, FlagPermissions.FlagCombo.OnlyTrue)
-                                    || perms.playerHas(onlinePlayer, Flags.build, FlagPermissions.FlagCombo.OnlyTrue);
-                        }
-                        case INTERACT_BLOCK -> {
-                            return perms.playerHas(onlinePlayer, Flags.container, FlagPermissions.FlagCombo.OnlyTrue);
-                        }
-                        case PLACE_BLOCK -> {
-                            // move 是为了机器人而检查的, 防止机器人跑进别人领地然后还出不来
-                            return perms.playerHas(onlinePlayer, Flags.place, FlagPermissions.FlagCombo.OnlyTrue)
-                                    || perms.playerHas(onlinePlayer, Flags.build, FlagPermissions.FlagCombo.OnlyTrue)
-                                    && perms.playerHas(onlinePlayer, Flags.move, FlagPermissions.FlagCombo.TrueOrNone);
-                        }
-                        default -> {
-                            return true;
-                        }
-                    }
-                }).get(15, TimeUnit.SECONDS);
+                return Bukkit.getScheduler().callSyncMethod(SlimeGlue.instance(), () -> checkPerm(
+                        perms,
+                        onlinePlayer,
+                        action)
+                ).get(15, TimeUnit.SECONDS);
             } catch (ExecutionException | InterruptedException | TimeoutException e) {
                 SlimeGlue.logger().w("A error occurred during query residence flag, skipped check");
                 e.printStackTrace();
@@ -114,25 +103,55 @@ public class ResidenceModule extends ACompatibilityModule {
             return true;
         }
 
-        if (!p.isOnline()) {
+        var onlinePlayer = p.getPlayer();
+        if (onlinePlayer == null) {
             return false;
         }
-
-        var onlinePlayer = p.getPlayer();
 
         if (onlinePlayer.hasPermission("residence.admin")) {
             return true;
         }
 
         var perms = res.getPermissions();
-        var playerPermission = Bukkit.getScheduler().callSyncMethod(SlimeGlue.instance(), () -> perms.playerHas(onlinePlayer, Flags.admin, FlagPermissions.FlagCombo.OnlyTrue));
+        if (perms == null) {
+            return true;
+        }
+
+        if (Bukkit.isPrimaryThread()) {
+            return perms.playerHas(onlinePlayer, Flags.admin, FlagPermissions.FlagCombo.OnlyTrue);
+        }
 
         try {
-            return perms != null && playerPermission.get(15, TimeUnit.SECONDS);
-        } catch (ExecutionException | InterruptedException | TimeoutException e) {
+            return Bukkit.getScheduler().callSyncMethod(SlimeGlue.instance(), () -> perms.playerHas(
+                    onlinePlayer,
+                    Flags.admin,
+                    FlagPermissions.FlagCombo.OnlyTrue
+            )).get();
+        } catch (ExecutionException | InterruptedException e) {
             SlimeGlue.logger().w("A error occurred during query residence flag, skipped check");
             e.printStackTrace();
             return true;
+        }
+    }
+
+    private boolean checkPerm(FlagPermissions perms, Player p, Interaction action) {
+        switch (action) {
+            case BREAK_BLOCK -> {
+                return perms.playerHas(p, Flags.destroy, FlagPermissions.FlagCombo.OnlyTrue)
+                        || perms.playerHas(p, Flags.build, FlagPermissions.FlagCombo.OnlyTrue);
+            }
+            case INTERACT_BLOCK -> {
+                return perms.playerHas(p, Flags.container, FlagPermissions.FlagCombo.OnlyTrue);
+            }
+            case PLACE_BLOCK -> {
+                // move 是为了机器人而检查的, 防止机器人跑进别人领地然后还出不来
+                return perms.playerHas(p, Flags.place, FlagPermissions.FlagCombo.OnlyTrue)
+                        || perms.playerHas(p, Flags.build, FlagPermissions.FlagCombo.OnlyTrue)
+                        && perms.playerHas(p, Flags.move, FlagPermissions.FlagCombo.TrueOrNone);
+            }
+            default -> {
+                return true;
+            }
         }
     }
 }
