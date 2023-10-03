@@ -114,7 +114,7 @@
         <dependency>
             <groupId>org.maxgamer</groupId>
             <artifactId>QuickShop</artifactId>
-            <version>5.1.1.2</version>
+            <version>5.1.2.5</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
