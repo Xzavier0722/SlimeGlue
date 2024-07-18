@@ -102,7 +102,7 @@
         <dependency>
             <groupId>com.github.Slimefun</groupId>
             <artifactId>Slimefun4</artifactId>
-            <version>RC-32</version>
+            <version>RC-37</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -130,20 +130,6 @@
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.bekvon.bukkit</groupId>
-            <artifactId>residence</artifactId>
-            <version>5.1.2.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/Residence.jar</systemPath>
-            <exclusions>
-                <exclusion>
-                    <!-- We don't need any of the dependencies -->
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
                 </exclusion>

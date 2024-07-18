@@ -10,7 +10,6 @@ import com.xzavier0722.mc.plugin.slimeglue.module.KingdomsXModule;
 import com.xzavier0722.mc.plugin.slimeglue.module.LocketteProModule;
 import com.xzavier0722.mc.plugin.slimeglue.module.MagicModule;
 import com.xzavier0722.mc.plugin.slimeglue.module.QuickShopModule;
-import com.xzavier0722.mc.plugin.slimeglue.module.ResidenceModule;
 import com.xzavier0722.mc.plugin.slimeglue.slimefun.GlueProtectionModule;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
@@ -99,7 +98,6 @@ public final class SlimeGlue extends JavaPlugin implements SlimefunAddon {
         moduleManager().register(new KingdomsXModule());
         moduleManager().register(new MagicModule());
         moduleManager().register(new QuickShopModule());
-        moduleManager().register(new ResidenceModule());
         moduleManager().register(new LocketteProModule());
     }
 
