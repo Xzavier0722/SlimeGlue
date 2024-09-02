@@ -34,7 +34,7 @@ jobs:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
-    - uses: actions/upload-artifact@v3.1.2
+    - uses: actions/upload-artifact@v3.2.1
       if: github.event_name != 'pull_request'
       with:
         name: SlimeGlue.jar
