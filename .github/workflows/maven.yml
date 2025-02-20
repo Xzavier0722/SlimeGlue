@@ -11,6 +11,7 @@ on:
     paths:
       - 'src/**'
       - 'pom.xml'
+      - '.github/workflows/**'
 
 jobs:
   build:
@@ -28,7 +29,7 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     - run: mkdir staging && cp target/*.jar staging
-    - uses: actions/cache@v3.3.0
+    - uses: actions/cache@v3
       if: github.event_name != 'pull_request'
       with:
         path: ~/.m2
