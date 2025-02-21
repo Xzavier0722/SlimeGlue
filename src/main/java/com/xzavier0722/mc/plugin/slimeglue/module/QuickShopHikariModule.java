@@ -27,7 +27,7 @@ public class QuickShopHikariModule extends ACompatibilityModule {
 
             @Override
             public boolean bypassCheck(OfflinePlayer player, Location location) {
-                return getQuickshopOwner(location) == player.getUniqueId();
+                return player.getUniqueId().equals(getQuickshopOwner(location));
             }
 
             @Override
