@@ -6,6 +6,7 @@ depend: [ Slimefun ]
 softdepend:
   - Kingdoms
   - Quickshop
+  - QuickShop-Hikari
   - Magic
   - LockettePro
 authors: [ Xzavier0722 ]

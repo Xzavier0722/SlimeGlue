@@ -7,6 +7,7 @@ import com.xzavier0722.mc.plugin.slimeglue.listener.SlimefunCompListener;
 import com.xzavier0722.mc.plugin.slimeglue.listener.SlimefunListener;
 import com.xzavier0722.mc.plugin.slimeglue.manager.CompatibilityModuleManager;
 import com.xzavier0722.mc.plugin.slimeglue.module.KingdomsXModule;
+import com.xzavier0722.mc.plugin.slimeglue.module.QuickShopHikariModule;
 import com.xzavier0722.mc.plugin.slimeglue.module.LocketteProModule;
 import com.xzavier0722.mc.plugin.slimeglue.module.MagicModule;
 import com.xzavier0722.mc.plugin.slimeglue.module.QuickShopModule;
@@ -98,6 +99,7 @@ public final class SlimeGlue extends JavaPlugin implements SlimefunAddon {
         moduleManager().register(new KingdomsXModule());
         moduleManager().register(new MagicModule());
         moduleManager().register(new QuickShopModule());
+        moduleManager().register(new QuickShopHikariModule());
         moduleManager().register(new LocketteProModule());
     }
 
