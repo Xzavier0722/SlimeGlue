@@ -28,7 +28,7 @@ jobs:
           java-version: '21'
           distribution: 'zulu'
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v6
       - name: Build with Gradle
         run: chmod +x gradlew && ./gradlew build --no-daemon
       - uses: actions/upload-artifact@v7
