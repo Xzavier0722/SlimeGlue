@@ -19,7 +19,7 @@ public class MagicModule extends ACompatibilityModule {
         addProtectionHandler(new IBlockProtectionHandler() {
             @Override
             public boolean canBreakBlock(OfflinePlayer player, Location location) {
-                verbose("canBreakBlock: player=" + player.getName() + ", loc=" + location);
+                verbose("canBreakBlock: loc=" + location);
                 return !isMagicBlock(location);
             }
         });
