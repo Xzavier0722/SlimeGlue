@@ -54,7 +54,7 @@ dependencies {
         transitive = false
     }
     compileOnly 'me.crafter.mc:lockettepro:2.16'
-    compileOnly 'com.github.Xzavier0722:SlimefunCompLib:b7a2bd8'
+    compileOnly 'com.github.Xzavier0722:SlimefunCompLib:1.0.2'
 }
 
 tasks.withType(JavaCompile).configureEach {
