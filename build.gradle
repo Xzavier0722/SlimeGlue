@@ -1,0 +1,74 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.xzavier0722.mc.plugin'
+
+def gitCommit = providers.environmentVariable('GITHUB_SHA')
+    .map { it.take(7) }
+    .orElse(providers.exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+    }.standardOutput.asText.map { it.trim() })
+    .getOrElse('unknown')
+
+version = "1.0.2-${gitCommit}"
+description = 'A Slimefun addon, target to improve the compatibility with other plugins'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_16
+    targetCompatibility = JavaVersion.VERSION_16
+}
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots' }
+    maven { url = 'https://jitpack.io' }
+    maven { url = 'https://maven.elmakers.com/repository/' }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'codeMcQuickShop'
+                url = 'https://repo.codemc.io/repository/maven-public/'
+                metadataSources {
+                    artifact()
+                }
+            }
+        }
+        filter {
+            includeModule 'org.maxgamer', 'QuickShop'
+        }
+    }
+    maven { url = 'https://repo.codemc.io/repository/maven-public/' }
+    maven { url = 'https://ci.nyaacat.com/maven/' }
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT'
+    compileOnly 'com.github.Slimefun:Slimefun4:RC-37'
+    compileOnly 'com.github.cryptomorin:kingdoms:1.13.9'
+    compileOnly 'com.ghostchu:quickshop-bukkit:6.2.0.8:shaded'
+    compileOnly('org.maxgamer:QuickShop:5.1.1.2') {
+        transitive = false
+    }
+    compileOnly('com.elmakers.mine.bukkit:MagicAPI:10.2') {
+        transitive = false
+    }
+    compileOnly 'me.crafter.mc:lockettepro:2.10-SNAPSHOT'
+    compileOnly 'com.github.Xzavier0722:SlimefunCompLib:b7a2bd8'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+processResources {
+    def properties = [version: project.version]
+    inputs.properties properties
+    filesMatching('plugin.yml') {
+        expand properties
+    }
+}
+
+jar {
+    archiveFileName = "${project.name}-exp-${gitCommit}.jar"
+}

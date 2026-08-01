@@ -1,0 +1,48 @@
+# This workflow builds and releases the project with Gradle.
+
+name: Auto build & release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - 'src/**'
+      - 'build.gradle'
+      - 'settings.gradle'
+      - 'gradle/**'
+      - 'gradlew'
+      - 'gradlew.bat'
+      - '.github/workflows/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Build with Gradle
+        run: chmod +x gradlew && ./gradlew build --no-daemon
+      - uses: actions/upload-artifact@v4
+        if: github.event_name != 'pull_request'
+        with:
+          name: SlimeGlue.jar
+          path: build/libs/*.jar
+      - name: Automatic Releases
+        uses: marvinpinto/action-automatic-releases@v1.2.1
+        if: github.event_name != 'pull_request'
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "exp"
+          prerelease: true
+          title: "SlimeGlue exp version"
+          files: |
+            build/libs/SlimeGlue-*.jar

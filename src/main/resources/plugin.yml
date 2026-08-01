@@ -1,5 +1,5 @@
 name: SlimeGlue
-version: '${project.version}'
+version: '${version}'
 main: com.xzavier0722.mc.plugin.slimeglue.SlimeGlue
 api-version: 1.13
 depend: [ Slimefun ]
