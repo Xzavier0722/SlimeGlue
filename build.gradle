@@ -47,7 +47,7 @@ dependencies {
     compileOnly 'com.github.Slimefun:Slimefun4:RC-37'
     compileOnly 'com.github.cryptomorin:kingdoms:1.13.9'
     compileOnly 'com.ghostchu:quickshop-bukkit:6.2.0.11:shaded'
-    compileOnly('org.maxgamer:QuickShop:5.1.1.2') {
+    compileOnly('org.maxgamer:QuickShop:5.1.2.5') {
         transitive = false
     }
     compileOnly('com.elmakers.mine.bukkit:MagicAPI:10.2') {
